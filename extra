@@ -1,0 +1,54 @@
+class StudentDataBase {
+    constructor() {
+        this.students = [];
+        this.count = 0;
+    }
+    createOne(student) {
+        this.students.push(student);
+        this.count++;
+    }
+    createMany(students) {
+        this.students.push(...students);
+        this.count += students.length;
+    }
+    updateOne(id, updatedStudent) {
+        const index = this.students.findIndex(s => s.id === id);
+        if (index !== -1) {
+            this.students[index] = { ...this.students[index], ...updatedStudent };
+        }
+    }
+    updateMany(ids, updatedStudent) {
+        this.students = this.students.map(s => {
+            if (ids.includes(s.id)) {
+                return { ...s, ...updatedStudent };
+            }
+            return s;
+        });
+    }
+    findAll() {
+        return this.students;
+    }
+    findOne(id) {
+        return this.students.find(s => s.id === id);
+    }
+    deleteOne(id) {
+        this.students = this.students.filter(s => s.id !== id);
+    }
+    deleteMany(ids) {
+        this.students = this.students.filter(s => !ids.includes(s.id));
+    }
+}
+
+let studentDB = new StudentDataBase();
+studentDB.createOne({ id: 1, name: "Ali", age: 20 });
+studentDB.createMany([
+    { id: 2, name: "Vali", age: 22 },
+    { id: 3, name: "Sattor", age: 21 }
+]);
+
+studentDB.updateOne(1, { age: 21 });
+studentDB.updateMany([2, 3], { age: 23 });
+console.log(studentDB.findAll());
+console.log(studentDB.findOne(2));
+studentDB.deleteOne(1);
+studentDB.deleteMany([2, 3]);
